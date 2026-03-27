@@ -60,6 +60,7 @@ flutter:
 
   assets:
     - assets/images/lol.png
+    - assets/images/brainblitz_wizardface.png
 
 
 

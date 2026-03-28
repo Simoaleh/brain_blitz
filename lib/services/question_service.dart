@@ -7,7 +7,6 @@ class QuestionService {
       'https://api.dictionaryapi.dev/api/v2/entries/en';
 
   // word bank
-  final List<String> wordBankAnimal = ['cat', 'dog', 'birdie'];
 
   final List<String> wordBankTechEasy = [
     'computer',
@@ -78,6 +77,47 @@ class QuestionService {
     'parallel computing',
   ];
 
+  final List<String> wordBankChemistryEasy = [
+  'atom', 'molecule', 'element', 'compound', 'mixture',
+  'solid', 'liquid', 'gas', 'water', 'oxygen',
+  'hydrogen', 'carbon', 'salt', 'sugar', 'acid',
+  'base', 'reaction', 'heat', 'mass', 'volume'
+];
+
+final List<String> wordBankChemistryMedium = [
+  'periodic table', 'chemical bond', 'ionic bond', 'covalent bond', 'solution',
+  'solvent', 'solute', 'concentration', 'ph scale', 'neutralization',
+  'oxidation', 'reduction', 'catalyst', 'equilibrium', 'molarity',
+  'stoichiometry', 'valence electrons', 'reactant', 'product', 'precipitate'
+];
+
+final List<String> wordBankChemistryHard = [
+  'quantum mechanics', 'electron configuration', 'orbital hybridization', 'enthalpy', 'entropy',
+  'gibbs free energy', 'le chatelier principle', 'electrochemistry', 'redox reaction', 'acid dissociation constant',
+  'buffer solution', 'titration curve', 'spectroscopy', 'chromatography', 'polymerization',
+  'nanotechnology', 'isomerism', 'thermodynamics', 'kinetics', 'molecular orbital theory'
+];
+
+final List<String> wordBankProgrammingEasy = [
+  'code', 'program', 'computer', 'variable', 'loop',
+ 'function', 'print', 'input',
+  'string', 'integer', 'boolean', 'debug', 'run',
+  'compile', 'error', 'output', 'syntax', 'command'
+];
+
+final List<String> wordBankProgrammingMedium = [
+  'array', 'list', 'object', 'class', 'method',
+  'function parameter', 'return value', 'conditional statement', 'for loop', 'while loop',
+  'recursion', 'exception handling', 'library', 'framework', 
+  'version control', 'git', 'repository', 'debugging tool', 'data structure'
+];
+
+final List<String> wordBankProgrammingHard = [
+  'object oriented programming', 'functional programming', 'asynchronous programming', 'multithreading', 'concurrency',
+  'memory management', 'garbage collection', 'design patterns', 'dependency injection', 'microservices',
+  'distributed systems', 'compiler design', 'interpreter', 'abstract syntax tree', 'type system',
+  'lambda calculus', 'algorithm optimization', 'time complexity', 'space complexity', 'low level programming'
+];
   Future<Question> fetchQuestion(String word) async {
     final response = await http.get(Uri.parse('$_baseUrl/$word'));
 
@@ -92,7 +132,7 @@ class QuestionService {
   }
 
   String getRandomWord() {
-    wordBankTechEasy.shuffle();
-    return wordBankTechEasy.first;
+    wordBankChemistryEasy.shuffle();
+    return wordBankChemistryEasy.first;
   }
 }

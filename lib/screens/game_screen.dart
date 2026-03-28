@@ -148,10 +148,14 @@ class _GameScreenState extends State<GameScreen> {
               ),
               // Letter tiles
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  wordLength,
-                  (i) => Container(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                wordLength,
+                (i) => AnimatedScale(
+                  scale: i == typed.length - 1 ? 1.2 : 1.0,
+                  duration: const Duration(milliseconds: 100),
+                  curve: Curves.easeOut,
+                  child: Container(
                     width: 36,
                     height: 36,
                     margin: const EdgeInsets.all(4),
@@ -178,6 +182,7 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ),
               ),
+            ),
             ],
           ),
         ),

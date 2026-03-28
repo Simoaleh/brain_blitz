@@ -33,7 +33,7 @@ class _GameScreenState extends State<GameScreen> {
             const SizedBox(height: 40),
             Container(
               height: 400,
-              margin: const EdgeInsets.all(16),
+              margin: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/game_background.png'),

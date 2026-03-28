@@ -13,15 +13,8 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Logo
-            const Text(
-              'Brain\nBlitz',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
-              ),
-            ),
+            Image.asset('assets/images/logo.png', width: 350, height: 350),
+
             const SizedBox(height: 40),
 
             //Menu buttons

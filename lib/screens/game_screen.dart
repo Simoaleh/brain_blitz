@@ -1,64 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:brain_blitz/state/game_state.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
   @override
+  State<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<GameState>().loadQuestion();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Top bar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.white),
-                  onPressed: () {},
-                ),
-                const Text(
-                  'LEVEL 1',
-                  style: TextStyle(
-                    color: Colors.orange,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.volume_up, color: Colors.white),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            // Image area
+            // top bar ...
+            const SizedBox(height: 40),
             Container(
-              height: 200,
+              height: 400,
               margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/question_image.png'),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/game_background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
+              child: gameState.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Center(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Text(
+                            gameState.currentQuestion?.definition ?? '',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.frederickaTheGreat(
+                              fontSize: 48,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
             ),
-            // Letter tiles (answer slots)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                7,
-                (_) => Container(
-                  width: 36,
-                  height: 36,
-                  margin: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
-            ),
+            // letter tiles ...
           ],
         ),
       ),

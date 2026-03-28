@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:brain_blitz/state/game_state.dart';
 
-void main() => runApp(const BrainBlitzApp());
+void main() => runApp(
+  ChangeNotifierProvider(
+    create: (_) => GameState(),
+    child: const BrainBlitzApp(),
+  ),
+);
 
 class BrainBlitzApp extends StatelessWidget {
   const BrainBlitzApp({super.key});

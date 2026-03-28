@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Question {
   final String word;
   final String definition;

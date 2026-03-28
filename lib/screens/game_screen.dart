@@ -29,6 +29,7 @@ class _GameScreenState extends State<GameScreen> {
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
+    context.read<GameState>().resetGame();
     super.dispose();
   }
 
@@ -57,7 +58,7 @@ class _GameScreenState extends State<GameScreen> {
                     onPressed: () {},
                   ),
                   Text(
-                    'LEVEL 1',
+                    'LEVEL ${gameState.level}',
                     style: GoogleFonts.pressStart2p(
                       fontSize: 30,
                       color: Colors.orange,
@@ -115,9 +116,13 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     Positioned(
                       bottom: 0,
-                      left: 20,
+                      left: 10,
                       child: Image.asset(
-                        'assets/images/regular_wiz.png',
+                        gameState.hasAnswered
+                            ? (gameState.isCorrect
+                                  ? 'assets/images/proud_wiz.png'
+                                  : 'assets/images/sad_wiz.png')
+                            : 'assets/images/regular_wiz.png',
                         width: 120,
                         height: 200,
                         fit: BoxFit.cover,
@@ -132,57 +137,63 @@ class _GameScreenState extends State<GameScreen> {
                 height: 0,
                 child: Opacity(
                   opacity: 0,
-                child: TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  maxLength: wordLength,
-                  onChanged: (value) {
-                    setState(() {});
-                    if (value.length == wordLength) {
-                      context.read<GameState>().checkAnswer(value);
-                    }
-                  },
-                  decoration: const InputDecoration(counterText: ''),
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    maxLength: wordLength,
+                    onChanged: (value) {
+                      setState(() {});
+                      if (value.length == wordLength) {
+                        context.read<GameState>().checkAnswer(value);
+                        if (context.read<GameState>().isCorrect) {
+                          Future.delayed(const Duration(milliseconds: 800), () {
+                            _controller.clear();
+                            context.read<GameState>().loadQuestion();
+                          });
+                        }
+                      }
+                    },
+                    decoration: const InputDecoration(counterText: ''),
+                  ),
                 ),
-              ),
               ),
               // Letter tiles
               Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                wordLength,
-                (i) => AnimatedScale(
-                  scale: i == typed.length - 1 ? 1.2 : 1.0,
-                  duration: const Duration(milliseconds: 100),
-                  curve: Curves.easeOut,
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: i < typed.length
-                          ? (typed.length == wordLength
-                              ? (gameState.isCorrect
-                                  ? Colors.green[300]
-                                  : Colors.red[300])
-                              : Colors.orange[200])
-                          : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Center(
-                      child: Text(
-                        i < typed.length ? typed[i].toUpperCase() : '',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  wordLength,
+                  (i) => AnimatedScale(
+                    scale: i == typed.length - 1 ? 1.2 : 1.0,
+                    duration: const Duration(milliseconds: 100),
+                    curve: Curves.easeOut,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      margin: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: i < typed.length
+                            ? (typed.length == wordLength
+                                  ? (gameState.isCorrect
+                                        ? Colors.green[300]
+                                        : Colors.red[300])
+                                  : Colors.orange[200])
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          i < typed.length ? typed[i].toUpperCase() : '',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
             ],
           ),
         ),

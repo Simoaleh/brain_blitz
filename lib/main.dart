@@ -10,7 +10,9 @@ class BrainBlitzApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF4B0082)),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromARGB(255, 62, 17, 77),
+      ),
       home: const HomeScreen(),
     );
   }

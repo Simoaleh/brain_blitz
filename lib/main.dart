@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:brain_blitz/state/game_state.dart';
+import 'package:brain_blitz/screens/login_screen.dart';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -17,10 +18,8 @@ class BrainBlitzApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 62, 17, 77),
-      ),
-      home: const HomeScreen(),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF4B0082)),
+      home: LoginScreen(),
     );
   }
 }

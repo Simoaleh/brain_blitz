@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:brain_blitz/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:brain_blitz/state/game_state.dart';
 import 'package:brain_blitz/screens/login_screen.dart';

@@ -29,35 +29,36 @@ class _GameScreenState extends State<GameScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // top bar ...
             const SizedBox(height: 40),
-            Container(
-              height: 400,
-              margin: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/game_background.png'),
-                  fit: BoxFit.cover,
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/game_background.png',
+                  width: double.infinity,
+                  height: 300,
+                  fit: BoxFit.fill,
                 ),
-              ),
-              child: gameState.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Center(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Text(
-                            gameState.currentQuestion?.definition ?? '',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.frederickaTheGreat(
-                              fontSize: 48,
-                              color: Colors.white,
-                            ),
+                gameState.isLoading
+                    ? const CircularProgressIndicator()
+                    : Positioned(
+                        left: 60,
+                        right: 60,
+                        top: 50,
+                        bottom: 40,
+                        child: Text(
+                          gameState.currentQuestion?.definition ?? '',
+                          textAlign: TextAlign.center,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                          style: GoogleFonts.frederickaTheGreat(
+                            fontSize: 25,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
+              ],
             ),
             // letter tiles ...
           ],

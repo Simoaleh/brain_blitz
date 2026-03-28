@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MenuButton extends StatelessWidget {
   final String label;
@@ -14,7 +15,7 @@ class MenuButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           decoration: BoxDecoration(
             color: Colors.orange,
             borderRadius: BorderRadius.circular(30),
@@ -22,10 +23,9 @@ class MenuButton extends StatelessWidget {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+            style: GoogleFonts.pressStart2p(
+              fontSize: 20,
+              color: Color(0xFF542EA0),
             ),
           ),
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
-import 'package:brain_blitz/screens/game_screen.dart';
 import 'package:brain_blitz/screens/leaderboards.dart';
 import 'package:brain_blitz/screens/category_screen.dart';
 
@@ -23,17 +22,10 @@ class HomeScreen extends StatelessWidget {
                 label: 'Singleplayer',
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const GameScreen()),
-                ),
-              ),
-              MenuButton(label: 'Multiplayer', onTap: () {}),
-              MenuButton(
-                label: 'Category',
-                onTap: () => Navigator.push(
-                  context,
                   MaterialPageRoute(builder: (_) => const CategoryScreen()),
                 ),
               ),
+              MenuButton(label: 'Multiplayer', onTap: () {}),
               MenuButton(
                 label: 'Leaderboards',
                 onTap: () => Navigator.push(

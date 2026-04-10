@@ -33,11 +33,74 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
   }
 
+  void _showGameOver() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.brown[900],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text(
+          'GAME OVER',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.pressStart2p(fontSize: 20, color: Colors.orange),
+        ),
+        content: Text(
+          'You reached Level ${context.read<GameState>().level}',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.pressStart2p(fontSize: 12, color: Colors.white),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<GameState>().resetGame();
+              context.read<GameState>().loadQuestion();
+              _focusNode.requestFocus();
+            },
+            child: Text(
+              'PLAY AGAIN',
+              style: GoogleFonts.pressStart2p(
+                fontSize: 12,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'QUIT',
+              style: GoogleFonts.pressStart2p(fontSize: 12, color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
-    final wordLength = gameState.currentQuestion?.word.length ?? 0;
+    final word = gameState.currentQuestion?.word ?? '';
+    final wordLength = word.length;
     final typed = _controller.text;
+    final hintIndex = gameState.hintIndex;
+
+    // Inject hint letter into typed string for display and answer checking
+    String effectiveTyped = typed;
+    if (hintIndex != null && word.isNotEmpty) {
+      final h = hintIndex!;
+      if (effectiveTyped.length >= h) {
+        effectiveTyped =
+            effectiveTyped.substring(0, h) +
+            word[h].toLowerCase() +
+            effectiveTyped.substring(h);
+      }
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -65,14 +128,36 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: Image.asset(
-                      'assets/images/hint_icon.png',
-                      width: 64,
-                      height: 64,
+                    icon: Opacity(
+                      opacity: gameState.hintUsed ? 0.3 : 1.0,
+                      child: Image.asset(
+                        'assets/images/hint_icon.png',
+                        width: 64,
+                        height: 64,
+                      ),
                     ),
-                    onPressed: () {},
+                    onPressed: gameState.hintUsed
+                        ? null
+                        : () {
+                            context.read<GameState>().setHintIndex(
+                              _controller.text.length,
+                            );
+                          },
                   ),
                 ],
+              ),
+              // Heart bar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (i) {
+                  return Image.asset(
+                    i < gameState.lives
+                        ? 'assets/images/heart.png'
+                        : 'assets/images/heart_black.png',
+                    width: 36,
+                    height: 36,
+                  );
+                }),
               ),
               SizedBox(
                 height: 360,
@@ -140,15 +225,41 @@ class _GameScreenState extends State<GameScreen> {
                   child: TextField(
                     controller: _controller,
                     focusNode: _focusNode,
-                    maxLength: wordLength,
+                    maxLength: hintIndex != null ? wordLength - 1 : wordLength,
                     onChanged: (value) {
                       setState(() {});
-                      if (value.length == wordLength) {
-                        context.read<GameState>().checkAnswer(value);
-                        if (context.read<GameState>().isCorrect) {
+
+                      String effective = value;
+                      if (hintIndex != null && word.isNotEmpty) {
+                        final h = hintIndex!;
+                        if (effective.length >= h) {
+                          effective =
+                              effective.substring(0, h) +
+                              word[h].toLowerCase() +
+                              effective.substring(h);
+                        }
+                      }
+
+                      if (effective.length == wordLength) {
+                        context.read<GameState>().checkAnswer(effective);
+                        final gs = context.read<GameState>();
+                        if (gs.isCorrect) {
                           Future.delayed(const Duration(milliseconds: 800), () {
+                            if (!mounted) return;
                             _controller.clear();
                             context.read<GameState>().loadQuestion();
+                            _focusNode.requestFocus();
+                          });
+                        } else {
+                          Future.delayed(const Duration(milliseconds: 600), () {
+                            if (!mounted) return;
+                            _controller.clear();
+                            setState(() {});
+                            if (context.read<GameState>().lives <= 0) {
+                              _showGameOver();
+                            } else {
+                              _focusNode.requestFocus();
+                            }
                           });
                         }
                       }
@@ -160,10 +271,26 @@ class _GameScreenState extends State<GameScreen> {
               // Letter tiles
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  wordLength,
-                  (i) => AnimatedScale(
-                    scale: i == typed.length - 1 ? 1.2 : 1.0,
+                children: List.generate(wordLength, (i) {
+                  final displayLetter = i < effectiveTyped.length
+                      ? effectiveTyped[i].toUpperCase()
+                      : '';
+
+                  Color tileColor;
+                  if (effectiveTyped.length == wordLength) {
+                    tileColor = gameState.isCorrect
+                        ? Colors.green[300]!
+                        : Colors.red[300]!;
+                  } else if (i == hintIndex) {
+                    tileColor = Colors.blue[200]!;
+                  } else if (i < effectiveTyped.length) {
+                    tileColor = Colors.orange[200]!;
+                  } else {
+                    tileColor = Colors.grey[300]!;
+                  }
+
+                  return AnimatedScale(
+                    scale: i == effectiveTyped.length - 1 ? 1.2 : 1.0,
                     duration: const Duration(milliseconds: 100),
                     curve: Curves.easeOut,
                     child: Container(
@@ -171,18 +298,12 @@ class _GameScreenState extends State<GameScreen> {
                       height: 36,
                       margin: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: i < typed.length
-                            ? (typed.length == wordLength
-                                  ? (gameState.isCorrect
-                                        ? Colors.green[300]
-                                        : Colors.red[300])
-                                  : Colors.orange[200])
-                            : Colors.grey[300],
+                        color: tileColor,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Center(
                         child: Text(
-                          i < typed.length ? typed[i].toUpperCase() : '',
+                          displayLetter,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -191,8 +312,8 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ),
             ],
           ),

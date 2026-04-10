@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
+import 'package:brain_blitz/screens/game_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -45,7 +46,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ...difficulties.map(
                   (difficulty) => MenuButton(
                     label: difficulty.toUpperCase(),
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const GameScreen()),
+                      (route) => route.settings.name == '/home',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),

@@ -1,4 +1,3 @@
-import 'package:brain_blitz/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/register_screen.dart';
 import 'package:flutter/gestures.dart';
@@ -140,10 +139,8 @@ class LoginScreen extends StatelessWidget {
                     width: 350,
                     child: MenuButton(
                       label: 'Sign In',
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const HomeScreen()),
-                      ),
+                      onTap: () =>
+                          Navigator.pushReplacementNamed(context, '/home'),
                     ),
                   ),
                 ),

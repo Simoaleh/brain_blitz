@@ -1,11 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/register_screen.dart';
 import 'package:flutter/gestures.dart';
+import 'package:brain_blitz/services/account_service.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:brain_blitz/screens/home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final error = account_service.instance.login(
+      usernameController.text.trim(),
+      passwordController.text,
+    );
+    if (error != null) {
+      setState(() => _errorMessage = error);
+      return;
+    }
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +52,6 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Logo
                 Center(
                   child: Image.asset(
                     'assets/images/wizard_face.png',
@@ -27,8 +60,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Heading
                 Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -41,8 +72,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Username field
                 const Text(
                   'Username',
                   style: TextStyle(
@@ -54,6 +83,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 TextField(
+                  controller: usernameController,
                   style: const TextStyle(fontSize: 15, color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Enter your username',
@@ -86,8 +116,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Password field
                 const Text(
                   'Password',
                   style: TextStyle(
@@ -99,6 +127,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 TextField(
+                  controller: passwordController,
                   obscureText: true,
                   style: const TextStyle(fontSize: 15, color: Colors.white),
                   decoration: InputDecoration(
@@ -131,27 +160,27 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (_errorMessage != null) ...
+                  [
+                    const SizedBox(height: 10),
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 13),
+                    ),
+                  ],
                 const SizedBox(height: 10),
-
-                // Sign in button
                 Center(
                   child: SizedBox(
                     width: 350,
-                    child: MenuButton(
-                      label: 'Sign In',
-                      onTap: () =>
-                          Navigator.pushReplacementNamed(context, '/home'),
-                    ),
+                    child: MenuButton(label: 'Sign In', onTap: _submit),
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Sign up link
                 Center(
                   child: RichText(
                     text: TextSpan(
                       text: "Don't have an account? ",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 14,
                       ),
@@ -163,11 +192,11 @@ class LoginScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => RegisterScreen(),
+                                  builder: (_) => const RegisterScreen(),
                                 ),
                               );
                             },
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.orange,
                             fontWeight: FontWeight.w600,
                           ),

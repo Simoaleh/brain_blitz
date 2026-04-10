@@ -1,10 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/login_screen.dart';
+import 'package:brain_blitz/services/account_service.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  String? errorMessage;
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final error = account_service.instance.register(
+      usernameController.text.trim(),
+      passwordController.text,
+    );  
+    if (error != null) {
+      setState(() => errorMessage = error);
+      return;
+    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +49,6 @@ class RegisterScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Logo
                 Center(
                   child: Image.asset(
                     'assets/images/wizard_face.png',
@@ -26,8 +57,6 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Heading
                 Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -40,8 +69,6 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Username field
                 const Text(
                   'Username',
                   style: TextStyle(
@@ -53,6 +80,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 TextField(
+                  controller: usernameController,
                   style: const TextStyle(fontSize: 15, color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Enter your username',
@@ -85,8 +113,6 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Password field
                 const Text(
                   'Password',
                   style: TextStyle(
@@ -98,6 +124,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 TextField(
+                  controller: passwordController,
                   obscureText: true,
                   style: const TextStyle(fontSize: 15, color: Colors.white),
                   decoration: InputDecoration(
@@ -130,19 +157,19 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (errorMessage != null) ...
+                  [
+                    const SizedBox(height: 10),
+                    Text(
+                      errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 13),
+                    ),
+                  ],
                 const SizedBox(height: 10),
-
-                // Sign in button
                 Center(
                   child: SizedBox(
                     width: 350,
-                    child: MenuButton(
-                      label: 'Sign Up',
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
-                      ),
-                    ),
+                    child: MenuButton(label: 'Sign Up', onTap: _submit),
                   ),
                 ),
                 const SizedBox(height: 10),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/login_screen.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -31,8 +32,8 @@ class RegisterScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     'Brain Blitz',
-                    style: TextStyle(
-                      fontSize: 48,
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.orange,
                     ),

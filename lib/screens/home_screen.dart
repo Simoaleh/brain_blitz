@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 40),
               const SizedBox(height: 80),
               MenuButton(
-                label: 'SPELLING BEE',
+                label: 'Singleplayer',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const GameScreen()),

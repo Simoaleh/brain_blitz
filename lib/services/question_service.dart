@@ -206,7 +206,7 @@ class QuestionService {
   final List<String> _usedWords = [];
 
   String getRandomWord() {
-    final remaining = wordBankTechEasy
+    final remaining = wordBankChemistryEasy
         .where((w) => !_usedWords.contains(w))
         .toList();
 
@@ -214,7 +214,7 @@ class QuestionService {
       _usedWords.clear();
     }
 
-    final available = remaining.isEmpty ? wordBankTechEasy : remaining;
+    final available = remaining.isEmpty ? wordBankChemistryEasy : remaining;
     available.shuffle();
     final word = available.first;
     _usedWords.add(word);

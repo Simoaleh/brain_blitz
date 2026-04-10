@@ -80,7 +80,7 @@ class _GameScreenState extends State<GameScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
             },
             child: Text(
               'QUIT',
@@ -99,6 +99,9 @@ class _GameScreenState extends State<GameScreen> {
     final wordLength = word.length;
     final typed = _controller.text;
     final hintIndex = gameState.hintIndex;
+    final int? inputMaxLength = wordLength > 0
+      ? (hintIndex != null ? (wordLength - 1).clamp(1, wordLength) : wordLength)
+      : null;
 
     // Inject hint letter into typed string for display and answer checking
     String effectiveTyped = typed;
@@ -128,7 +131,7 @@ class _GameScreenState extends State<GameScreen> {
                       width: 64,
                       height: 64,
                     ),
-                    onPressed: () {},
+                    onPressed: () {}, // eto josiahhhhhhhhhhhhhhhhhhh
                   ),
                   Text(
                     'LEVEL ${gameState.level}',
@@ -235,7 +238,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: TextField(
                     controller: _controller,
                     focusNode: _focusNode,
-                    maxLength: hintIndex != null ? wordLength - 1 : wordLength,
+                    maxLength: inputMaxLength,
                     onChanged: (value) {
                       setState(() {});
 

@@ -7,11 +7,33 @@ class BgmService {
 
   final AudioPlayer player = AudioPlayer();
   bool isStarted = false;
+  bool listenersAttached = false;
+
+  void attachListeners() {
+    if (listenersAttached) return;
+    listenersAttached = true;
+
+    player.onPlayerStateChanged.listen((state) {
+      isStarted = state == PlayerState.playing;
+    });
+  }
 
   Future<void> start() async {
+    attachListeners();
+    if (isStarted && player.state == PlayerState.playing) {
+      return;
+    }
+
+    if (player.state == PlayerState.paused) {
+      await player.resume();
+      isStarted = true;
+      return;
+    }
+
     if (isStarted) {
       return;
     }
+
     await player.setReleaseMode(ReleaseMode.loop);
     await player.setVolume(0.10);
     await player.play(AssetSource('audio/bgm.mp3'));

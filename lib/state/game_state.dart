@@ -7,6 +7,8 @@ class GameState extends ChangeNotifier {
   int lives = 3;
   bool hintUsed = false;
   int? hintIndex;
+  String selectedCategory = 'Technology';
+  String selectedDifficulty = 'Easy';
 
   final QuestionService _service = QuestionService();
 
@@ -14,6 +16,12 @@ class GameState extends ChangeNotifier {
   bool isLoading = false;
   bool isCorrect = false;
   bool hasAnswered = false;
+
+  void setGameMode({required String category, required String difficulty}) {
+    selectedCategory = category;
+    selectedDifficulty = difficulty;
+    resetGame();
+  }
 
   Future<void> loadQuestion() async {
     isLoading = true;
@@ -23,7 +31,10 @@ class GameState extends ChangeNotifier {
     hintIndex = null;
     notifyListeners();
 
-    final word = _service.getRandomWord();
+    final word = _service.getRandomWord(
+      category: selectedCategory,
+      difficulty: selectedDifficulty,
+    );
 
     try {
       currentQuestion = await _service.fetchQuestion(word);

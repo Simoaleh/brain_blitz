@@ -24,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _submit() {
-    final error = account_service.instance.register(
+    final error = AccountService.instance.register(
       usernameController.text.trim(),
       passwordController.text,
     );  

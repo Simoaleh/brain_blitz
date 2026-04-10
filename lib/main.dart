@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:brain_blitz/services/bgm_service.dart';
 import 'package:brain_blitz/state/game_state.dart';
 import 'package:brain_blitz/screens/login_screen.dart';
 import 'package:brain_blitz/screens/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  BgmService.instance.start();
-
   runApp(
     ChangeNotifierProvider(
       create: (_) => GameState(),

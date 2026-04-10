@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:brain_blitz/screens/register_screen.dart';
+import 'package:brain_blitz/screens/home_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:brain_blitz/services/account_service.dart';
+import 'package:brain_blitz/services/bgm_service.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:brain_blitz/screens/home_screen.dart';
@@ -19,6 +21,12 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    BgmService.instance.start();
+  }
+
+  @override
   void dispose() {
     usernameController.dispose();
     passwordController.dispose();
@@ -26,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit() {
-    final error = account_service.instance.login(
+    final error = AccountService.instance.login(
       usernameController.text.trim(),
       passwordController.text,
     );

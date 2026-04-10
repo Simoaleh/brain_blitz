@@ -1,6 +1,6 @@
-class account_service {
-  account_service._();
-  static final account_service instance = account_service._();
+class AccountService {
+  AccountService._();
+  static final AccountService instance = AccountService._();
 
   final List<Map<String, String>> users = [];
 
@@ -8,7 +8,7 @@ class account_service {
     if (username.isEmpty || password.isEmpty) {
       return 'Username and password cannot be empty.';
     }
-    if (users.any((u) => u['username']!.toLowerCase() == username.toLowerCase())) {
+    if (users.any((u) => u['username'] == username)) {
       return 'Username already taken.';
     }
     users.add({'username': username, 'password': password});
@@ -22,7 +22,7 @@ class account_service {
     }
     final match = users.any(
       (u) =>
-          u['username']!.toLowerCase() == username.toLowerCase() &&
+          u['username'] == username &&
           u['password'] == password,
     );
     if (!match) {

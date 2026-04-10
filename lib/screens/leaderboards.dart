@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LeaderboardsScreen extends StatelessWidget {
   const LeaderboardsScreen({super.key});
@@ -6,11 +7,32 @@ class LeaderboardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final players = [
-      {'name': 'Alice', 'score': 12},
-      {'name': 'Bob', 'score': 9},
-      {'name': 'Charlie', 'score': 8},
-      {'name': 'Diana', 'score': 7},
-      {'name': 'Ethan', 'score': 6},
+      {'name': 'Alice', 'score': 120},
+      {'name': 'Bob', 'score': 98},
+      {'name': 'Charlie', 'score': 87},
+      {'name': 'Diana', 'score': 75},
+      {'name': 'Ethan', 'score': 64},
+      {'name': 'Fiona', 'score': 61},
+      {'name': 'George', 'score': 57},
+      {'name': 'Hannah', 'score': 53},
+      {'name': 'Ivan', 'score': 49},
+      {'name': 'Julia', 'score': 45},
+      {'name': 'Kevin', 'score': 42},
+      {'name': 'Luna', 'score': 38},
+      {'name': 'Marco', 'score': 35},
+      {'name': 'Nina', 'score': 30},
+      {'name': 'Oscar', 'score': 27},
+      {'name': 'Paula', 'score': 24},
+      {'name': 'Quinn', 'score': 20},
+      {'name': 'Rita', 'score': 17},
+      {'name': 'Sam', 'score': 14},
+      {'name': 'Tina', 'score': 10},
+    ];
+
+    const medalColors = [
+      Color(0xFFFFD700),
+      Color(0xFFC0C0C0),
+      Color(0xFFCD7F32),
     ];
 
     return Scaffold(
@@ -19,7 +41,7 @@ class LeaderboardsScreen extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/lol.png'),
+                image: AssetImage('assets/images/lol1.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -27,104 +49,126 @@ class LeaderboardsScreen extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                const SizedBox(height: 150),
+                const SizedBox(height: 16),
                 Center(
-                  child: SizedBox(
+                  child: Container(
                     width: 500,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black38,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'LEADERBOARDS',
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 22,
+                          color: Colors.orange,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 4,
+                    ),
+                    itemCount: players.length,
+                    itemBuilder: (context, index) {
+                      final player = players[index];
+                      final name = player['name'] as String;
+                      final score = player['score'] as int;
+                      final isMedal = index < 3;
+                      final rankColor = isMedal
+                          ? medalColors[index]
+                          : Colors.white;
+
+                      return Card(
+                        color: Colors.white.withOpacity(0.85),
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: isMedal
+                              ? BorderSide(color: medalColors[index], width: 2)
+                              : BorderSide.none,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 36,
+                                child: Text(
+                                  '#${index + 1}',
+                                  style: GoogleFonts.pressStart2p(
+                                    fontSize: 12,
+                                    color: rankColor == Colors.white
+                                        ? Colors.deepPurple
+                                        : rankColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  name,
+                                  style: GoogleFonts.rajdhani(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(
+                                '$score pts',
+                                style: GoogleFonts.rajdhani(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
                     child: Container(
+                      width: 280,
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       decoration: BoxDecoration(
-                        color: Colors.deepPurple,
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      child: const Center(
-                        child: Text(
-                          'LEADERBOARDS',
-                          style: TextStyle(
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Center(
-                  child: SizedBox(
-                    width: 340,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: players.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final player = entry.value;
-                        final name = player['name'] as String;
-                        final score = player['score'] as int;
-
-                        return Card(
-                          color: Colors.white.withOpacity(0.8),
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  flex: 2,
-                                  child: Text(
-                                    '#${index + 1} $name',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Text(
-                                    '$score pts',
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.orange,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Center(
-                  child: SizedBox(
-                    width: 220,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
-                        ),
-                      ),
-                      child: const Text(
+                      child: Text(
                         'Back to Home',
-                        style: TextStyle(fontSize: 20, color: Colors.orange),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 14,
+                          color: const Color(0xFF542EA0),
+                        ),
                       ),
                     ),
                   ),

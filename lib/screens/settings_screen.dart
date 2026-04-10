@@ -43,7 +43,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.orange,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           title: Text(
             'Sign Out',
             textAlign: TextAlign.center,
@@ -94,119 +96,156 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.orange,
-      ),
       backgroundColor: const Color(0xFF4B0082),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Enable Notifications Button
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                width: 300,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            Center(
+              child: Container(
+                width: 500,
+                padding: const EdgeInsets.symmetric(vertical: 18),
                 decoration: BoxDecoration(
-                  color: Colors.orange,
+                  color: Colors.deepPurple,
                   borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Notifications',
-                          style: GoogleFonts.pressStart2p(
-                            fontSize: 11,
-                            color: Colors.blue[900],
-                          ),
-                        ),
-                      ),
-                      Switch(
-                        value: _notificationsEnabled,
-                        activeColor: Colors.blue[900],
-                        onChanged: (value) {
-                          setState(() => _notificationsEnabled = value);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // Play Music Button
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Play Music',
-                          style: GoogleFonts.pressStart2p(
-                            fontSize: 11,
-                            color: Colors.blue[900],
-                          ),
-                        ),
-                      ),
-                      Switch(
-                        value: _musicEnabled,
-                        activeColor: Colors.blue[900],
-                        onChanged: _toggleMusic,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // Sign Out Button
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => _showSignOutDialog(context),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.exit_to_app,
-                            color: Colors.blue[900],
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Sign Out',
-                            style: GoogleFonts.pressStart2p(
-                              fontSize: 11,
-                              color: Colors.blue[900],
-                            ),
-                          ),
-                        ],
-                      ),
+                child: Center(
+                  child: Text(
+                    'SETTINGS',
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 22,
+                      color: Colors.orange,
+                      letterSpacing: 2,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 40),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Notifications',
+                                style: GoogleFonts.pressStart2p(
+                                  fontSize: 11,
+                                  color: Colors.blue[900],
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: _notificationsEnabled,
+                              activeColor: Colors.blue[900],
+                              onChanged: (value) {
+                                setState(() => _notificationsEnabled = value);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Play Music',
+                                style: GoogleFonts.pressStart2p(
+                                  fontSize: 11,
+                                  color: Colors.blue[900],
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: _musicEnabled,
+                              activeColor: Colors.blue[900],
+                              onChanged: _toggleMusic,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => _showSignOutDialog(context),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 16,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.exit_to_app,
+                                  color: Colors.blue[900],
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Sign Out',
+                                  style: GoogleFonts.pressStart2p(
+                                    fontSize: 11,
+                                    color: Colors.blue[900],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -36,7 +36,6 @@ class QuestionService {
     'hardware',
     'operating system',
     'browser',
-    'cloud storage',
     'database',
     'network',
     'firewall',
@@ -49,9 +48,7 @@ class QuestionService {
     'server',
     'client',
     'bandwidth',
-    'api',
     'debugging',
-    'version control',
   ];
 
   final List<String> wordBankTechHard = [
@@ -60,43 +57,26 @@ class QuestionService {
     'neural network',
     'blockchain',
     'cryptography',
-    'distributed systems',
     'data mining',
-    'quantum computing',
     'natural language processing',
-    'computer vision',
     'big data',
-    'edge computing',
     'internet of things',
     'cybersecurity',
-    'penetration testing',
-    'virtualization',
-    'containerization',
-    'microservices architecture',
-    'devops',
-    'parallel computing',
   ];
 
   final List<String> wordBankChemistryEasy = ['atom', 'molecule', 'element'];
 
   final List<String> wordBankChemistryMedium = [
     'periodic table',
-    'chemical bond',
-    'ionic bond',
-    'covalent bond',
     'solution',
     'solvent',
     'solute',
     'concentration',
-    'ph scale',
-    'neutralization',
     'oxidation',
     'reduction',
     'catalyst',
     'equilibrium',
-    'molarity',
     'stoichiometry',
-    'valence electrons',
     'reactant',
     'product',
     'precipitate',
@@ -104,25 +84,15 @@ class QuestionService {
 
   final List<String> wordBankChemistryHard = [
     'quantum mechanics',
-    'electron configuration',
-    'orbital hybridization',
     'enthalpy',
     'entropy',
-    'gibbs free energy',
-    'le chatelier principle',
     'electrochemistry',
-    'redox reaction',
-    'acid dissociation constant',
     'buffer solution',
-    'titration curve',
     'spectroscopy',
     'chromatography',
-    'polymerization',
     'nanotechnology',
-    'isomerism',
     'thermodynamics',
     'kinetics',
-    'molecular orbital theory',
   ];
 
   final List<String> wordBankProgrammingEasy = [
@@ -152,44 +122,20 @@ class QuestionService {
     'object',
     'class',
     'method',
-    'function parameter',
-    'return value',
-    'conditional statement',
-    'for loop',
-    'while loop',
     'recursion',
-    'exception handling',
     'library',
     'framework',
-    'version control',
     'git',
     'repository',
-    'debugging tool',
-    'data structure',
   ];
 
   final List<String> wordBankProgrammingHard = [
-    'object oriented programming',
-    'functional programming',
-    'asynchronous programming',
     'multithreading',
     'concurrency',
-    'memory management',
     'garbage collection',
-    'design patterns',
-    'dependency injection',
-    'microservices',
-    'distributed systems',
-    'compiler design',
     'interpreter',
-    'abstract syntax tree',
-    'type system',
-    'lambda calculus',
-    'algorithm optimization',
-    'time complexity',
-    'space complexity',
-    'low level programming',
   ];
+  
   Future<Question> fetchQuestion(String word) async {
     final response = await http.get(Uri.parse('$_baseUrl/$word'));
 
@@ -203,21 +149,43 @@ class QuestionService {
     }
   }
 
-  final List<String> _usedWords = [];
+  final Map<String, Set<String>> _usedWordsByPool = {};
 
-  String getRandomWord() {
-    final remaining = wordBankChemistryEasy
-        .where((w) => !_usedWords.contains(w))
-        .toList();
+  String _normalize(String value) => value.trim().toLowerCase();
 
+  List<String> _getWordBank(String category, String difficulty) {
+    final c = _normalize(category);
+    final d = _normalize(difficulty);
+
+    if (c == 'technology' && d == 'easy') return wordBankTechEasy;
+    if (c == 'technology' && d == 'medium') return wordBankTechMedium;
+    if (c == 'technology' && d == 'hard') return wordBankTechHard;
+
+    if (c == 'chemistry' && d == 'easy') return wordBankChemistryEasy;
+    if (c == 'chemistry' && d == 'medium') return wordBankChemistryMedium;
+    if (c == 'chemistry' && d == 'hard') return wordBankChemistryHard;
+
+    if (c == 'programming' && d == 'easy') return wordBankProgrammingEasy;
+    if (c == 'programming' && d == 'medium') return wordBankProgrammingMedium;
+    if (c == 'programming' && d == 'hard') return wordBankProgrammingHard;
+
+    return wordBankProgrammingEasy;
+  }
+
+  String getRandomWord({required String category, required String difficulty}) {
+    final bank = _getWordBank(category, difficulty);
+    final poolKey = '${_normalize(category)}|${_normalize(difficulty)}';
+    final used = _usedWordsByPool.putIfAbsent(poolKey, () => <String>{});
+
+    var remaining = bank.where((w) => !used.contains(w)).toList();
     if (remaining.isEmpty) {
-      _usedWords.clear();
+      used.clear();
+      remaining = List<String>.from(bank);
     }
 
-    final available = remaining.isEmpty ? wordBankChemistryEasy : remaining;
-    available.shuffle();
-    final word = available.first;
-    _usedWords.add(word);
+    remaining.shuffle();
+    final word = remaining.first;
+    used.add(word);
     return word;
   }
 }

@@ -40,6 +40,18 @@ class BgmService {
     isStarted = true; 
   }
 
+  Future<void> pause() async {
+    await player.pause();
+    isStarted = false;
+  }
+
+  Future<void> resume() async {
+    if (player.state == PlayerState.paused) {
+      await player.resume();
+      isStarted = true;
+    }
+  }
+
   Future<void> stop() async {
     await player.stop();
     isStarted = false;

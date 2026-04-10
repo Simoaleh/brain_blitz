@@ -3,6 +3,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:brain_blitz/state/game_state.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:brain_blitz/screens/settings_screen.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -106,7 +107,7 @@ class _GameScreenState extends State<GameScreen> {
     // Inject hint letter into typed string for display and answer checking
     String effectiveTyped = typed;
     if (hintIndex != null && word.isNotEmpty) {
-      final h = hintIndex!;
+      final h = hintIndex;
       if (effectiveTyped.length >= h) {
         effectiveTyped =
             effectiveTyped.substring(0, h) +
@@ -125,14 +126,25 @@ class _GameScreenState extends State<GameScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: Image.asset(
+                  GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SettingsScreen(),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
                       'assets/images/settings_icon.png',
                       width: 64,
                       height: 64,
                     ),
-                    onPressed: () {}, // eto josiahhhhhhhhhhhhhhhhhhh
                   ),
+                ),
+
                   Text(
                     'LEVEL ${gameState.level}',
                     style: GoogleFonts.pressStart2p(
@@ -244,7 +256,7 @@ class _GameScreenState extends State<GameScreen> {
 
                       String effective = value;
                       if (hintIndex != null && word.isNotEmpty) {
-                        final h = hintIndex!;
+                        final h = hintIndex;
                         if (effective.length >= h) {
                           effective =
                               effective.substring(0, h) +

@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:brain_blitz/services/account_service.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:brain_blitz/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

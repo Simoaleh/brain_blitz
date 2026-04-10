@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:brain_blitz/state/game_state.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,10 +14,13 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  final FlutterTts _tts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
+    _tts.setLanguage('en-US');
+    _tts.setSpeechRate(0.4);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<GameState>().loadQuestion();
@@ -25,10 +29,16 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  Future<void> _speakWord() async {
+    final word = context.read<GameState>().currentQuestion?.word;
+    if (word != null) await _tts.speak(word);
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
+    _tts.stop();
     context.read<GameState>().resetGame();
     super.dispose();
   }
@@ -268,6 +278,17 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ),
               ),
+              // Dictate button
+              const SizedBox(height: 8),
+              IconButton(
+                iconSize: 48,
+                icon: const Icon(Icons.volume_up_rounded, color: Colors.orange),
+                tooltip: 'Hear the word',
+                onPressed: gameState.isLoading || gameState.currentQuestion == null
+                    ? null
+                    : _speakWord,
+              ),
+              const SizedBox(height: 4),
               // Letter tiles
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

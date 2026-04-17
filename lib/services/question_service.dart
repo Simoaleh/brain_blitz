@@ -64,7 +64,18 @@ class QuestionService {
     'cybersecurity',
   ];
 
-  final List<String> wordBankChemistryEasy = ['atom', 'molecule', 'element'];
+  final List<String> wordBankChemistryEasy = [
+    'atom',
+    'molecule',
+    'element',
+    'acid',
+    'base',
+    'bond',
+    'ion',
+    'gas',
+    'solid',
+    'liquid',
+  ];
 
   final List<String> wordBankChemistryMedium = [
     'periodic table',

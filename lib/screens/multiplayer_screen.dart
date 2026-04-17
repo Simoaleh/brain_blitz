@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:brain_blitz/state/user_state.dart';
 
 class MultiplayerScreen extends StatefulWidget {
   const MultiplayerScreen({super.key});
@@ -47,6 +49,9 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
   }
 
   void _showProfile(BuildContext context) {
+    final userState = context.read<UserState>();
+    final username = userState.name;
+
     final rank = _profileData['rank'] as String;
     final rankColor = rank == 'Gold'
         ? const Color(0xFFFFD700)
@@ -109,7 +114,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
             ),
             const SizedBox(height: 12),
             Text(
-              _profileData['username'] as String,
+              username,
               style: GoogleFonts.pressStart2p(
                 color: Colors.white,
                 fontSize: 14,

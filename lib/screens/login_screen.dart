@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:brain_blitz/services/account_service.dart';
 import 'package:brain_blitz/widgets/menu_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:brain_blitz/state/user_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,6 +36,16 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => _errorMessage = error);
       return;
     }
+
+    // Get current user and update UserState
+    final user = AccountService.instance.getCurrentUser();
+    if (user != null) {
+      context.read<UserState>().setUser(
+        name: user['name'] ?? 'Player',
+        username: user['username'] ?? '',
+      );
+    }
+
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -160,14 +172,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                if (_errorMessage != null) ...
-                  [
-                    const SizedBox(height: 10),
-                    Text(
-                      _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 13),
-                    ),
-                  ],
+                if (_errorMessage != null) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 13),
+                  ),
+                ],
                 const SizedBox(height: 10),
                 Center(
                   child: SizedBox(

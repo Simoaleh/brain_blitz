@@ -5,6 +5,7 @@ import 'package:brain_blitz/services/question_service.dart';
 class GameState extends ChangeNotifier {
   int level = 1;
   int lives = 3;
+  int maxLives = 3;
   bool hintUsed = false;
   int? hintIndex;
   String selectedCategory = 'Technology';
@@ -28,15 +29,19 @@ class GameState extends ChangeNotifier {
     switch (difficulty.toLowerCase()) {
       case 'easy':
         lives = 5;
+        maxLives = 5;
         break;
       case 'medium':
         lives = 3;
+        maxLives = 3;
         break;
       case 'hard':
         lives = 1;
+        maxLives = 1;
         break;
       default:
         lives = 3;
+        maxLives = 3;
     }
     notifyListeners();
   }

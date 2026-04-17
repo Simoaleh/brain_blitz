@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:brain_blitz/services/bgm_service.dart';
 import 'login_screen.dart';
+import 'profile_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -12,11 +14,13 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late bool _musicEnabled;
+  late bool _notificationsEnabled;
 
   @override
   void initState() {
     super.initState();
     _musicEnabled = BgmService.instance.isStarted;
+    _notificationsEnabled = true;
   }
 
   void _signOut(BuildContext context) {
@@ -102,18 +106,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               alignment: Alignment.topLeft,
               child: IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back_ios_new,
                   color: Colors.orange,
-                  size: 20,
+                  size: 24.sp,
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Center(
               child: Container(
                 width: 500,
-                padding: const EdgeInsets.symmetric(vertical: 18),
+                padding: EdgeInsets.symmetric(vertical: 18.h),
                 decoration: BoxDecoration(
                   color: Colors.deepPurple,
                   borderRadius: BorderRadius.circular(12),
@@ -129,7 +133,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Text(
                     'SETTINGS',
                     style: GoogleFonts.pressStart2p(
-                      fontSize: 22,
+                      fontSize: 22.sp,
                       color: Colors.orange,
                       letterSpacing: 2,
                     ),
@@ -137,32 +141,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40.h),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Profile Button
                     Container(
-                      margin: const EdgeInsets.symmetric(vertical: 12),
-                      width: 300,
+                      margin: EdgeInsets.symmetric(vertical: 12.h),
+                      width: 300.w,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ProfileSettingsScreen(),
+                              ),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 16.h,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  color: Colors.blue[900],
+                                  size: 20.sp,
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  'PROFILE',
+                                  style: GoogleFonts.pressStart2p(
+                                    fontSize: 11.sp,
+                                    color: Colors.blue[900],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Music Toggle
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 12.h),
+                      width: 300.w,
                       decoration: BoxDecoration(
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 8.h,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Text(
-                                'Play Music',
+                                'PLAY MUSIC',
                                 style: GoogleFonts.pressStart2p(
-                                  fontSize: 11,
+                                  fontSize: 11.sp,
                                   color: Colors.blue[900],
                                 ),
                               ),
@@ -176,9 +229,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                     ),
+
+                    // Notifications Toggle
                     Container(
-                      margin: const EdgeInsets.symmetric(vertical: 12),
-                      width: 300,
+                      margin: EdgeInsets.symmetric(vertical: 12.h),
+                      width: 300.w,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 8.h,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'NOTIFICATIONS',
+                                style: GoogleFonts.pressStart2p(
+                                  fontSize: 11.sp,
+                                  color: Colors.blue[900],
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: _notificationsEnabled,
+                              activeColor: Colors.blue[900],
+                              onChanged: (value) {
+                                setState(() => _notificationsEnabled = value);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Sign Out Button
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 12.h),
+                      width: 300.w,
                       decoration: BoxDecoration(
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(12),
@@ -189,9 +281,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           onTap: () => _showSignOutDialog(context),
                           borderRadius: BorderRadius.circular(12),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 16,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 16.h,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -199,13 +291,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Icon(
                                   Icons.exit_to_app,
                                   color: Colors.blue[900],
-                                  size: 20,
+                                  size: 20.sp,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8.w),
                                 Text(
-                                  'Sign Out',
+                                  'SIGN OUT',
                                   style: GoogleFonts.pressStart2p(
-                                    fontSize: 11,
+                                    fontSize: 11.sp,
                                     color: Colors.blue[900],
                                   ),
                                 ),

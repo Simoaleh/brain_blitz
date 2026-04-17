@@ -37,7 +37,6 @@ class _GameScreenState extends State<GameScreen> {
     final word = context.read<GameState>().currentQuestion?.word;
     if (word != null) {
       await _tts.speak(word);
-      _restoreKeyboardFocus();
     }
   }
 
@@ -223,7 +222,6 @@ class _GameScreenState extends State<GameScreen> {
                                   context.read<GameState>().setHintIndex(
                                     _controller.text.length,
                                   );
-                                  _restoreKeyboardFocus();
                                 },
                         ),
                       ],
@@ -231,7 +229,7 @@ class _GameScreenState extends State<GameScreen> {
                     // Heart bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(gameState.lives, (i) {
+                      children: List.generate(gameState.maxLives, (i) {
                         return Image.asset(
                           i < gameState.lives
                               ? 'assets/images/heart.png'
@@ -290,7 +288,8 @@ class _GameScreenState extends State<GameScreen> {
                             bottom: 0,
                             left: 10.w,
                             child: GestureDetector(
-                              onTap: gameState.isLoading ||
+                              onTap:
+                                  gameState.isLoading ||
                                       gameState.currentQuestion == null
                                   ? null
                                   : _speakWord,
@@ -380,55 +379,55 @@ class _GameScreenState extends State<GameScreen> {
                       child: GestureDetector(
                         onTap: () => _restoreKeyboardFocus(),
                         child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(wordLength, (i) {
-                          final displayLetter = i < effectiveTyped.length
-                              ? effectiveTyped[i].toUpperCase()
-                              : '';
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(wordLength, (i) {
+                            final displayLetter = i < effectiveTyped.length
+                                ? effectiveTyped[i].toUpperCase()
+                                : '';
 
-                          Color tileColor;
-                          if (effectiveTyped.length == wordLength) {
-                            tileColor = gameState.isCorrect
-                                ? Colors.green[300]!
-                                : Colors.red[300]!;
-                          } else if (i == hintIndex) {
-                            tileColor = Colors.blue[200]!;
-                          } else if (i < effectiveTyped.length) {
-                            tileColor = Colors.orange[200]!;
-                          } else {
-                            tileColor = Colors.grey[300]!;
-                          }
+                            Color tileColor;
+                            if (effectiveTyped.length == wordLength) {
+                              tileColor = gameState.isCorrect
+                                  ? Colors.green[300]!
+                                  : Colors.red[300]!;
+                            } else if (i == hintIndex) {
+                              tileColor = Colors.blue[200]!;
+                            } else if (i < effectiveTyped.length) {
+                              tileColor = Colors.orange[200]!;
+                            } else {
+                              tileColor = Colors.grey[300]!;
+                            }
 
-                          return AnimatedScale(
-                            scale: i == effectiveTyped.length - 1 ? 1.2 : 1.0,
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.easeOut,
-                            child: Container(
-                              width: tileSize,
-                              height: tileSize,
-                              margin: EdgeInsets.all(
-                                (tileSize * 0.08).clamp(2.0, 5.0),
-                              ),
-                              decoration: BoxDecoration(
-                                color: tileColor,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Center(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    displayLetter,
-                                    style: TextStyle(
-                                      fontSize: tileFontSize,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                            return AnimatedScale(
+                              scale: i == effectiveTyped.length - 1 ? 1.2 : 1.0,
+                              duration: const Duration(milliseconds: 100),
+                              curve: Curves.easeOut,
+                              child: Container(
+                                width: tileSize,
+                                height: tileSize,
+                                margin: EdgeInsets.all(
+                                  (tileSize * 0.08).clamp(2.0, 5.0),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: tileColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Center(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      displayLetter,
+                                      style: TextStyle(
+                                        fontSize: tileFontSize,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          }),
                         ),
                       ),
                     ),

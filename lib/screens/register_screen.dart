@@ -12,12 +12,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final nameController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String? errorMessage;
 
   @override
   void dispose() {
+    nameController.dispose();
     usernameController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -25,9 +27,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submit() {
     final error = AccountService.instance.register(
+      nameController.text.trim(),
       usernameController.text.trim(),
       passwordController.text,
-    );  
+    );
     if (error != null) {
       setState(() => errorMessage = error);
       return;
@@ -69,6 +72,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                const Text(
+                  'Name',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: nameController,
+                  style: const TextStyle(fontSize: 15, color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Enter your name',
+                    hintStyle: const TextStyle(color: Color(0xFF8A8A8A)),
+                    prefixIcon: const Icon(
+                      Icons.person_outline_rounded,
+                      size: 20,
+                      color: Colors.orange,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white10,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF3A3A3A),
+                        width: 1,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(
+                        color: Colors.orange,
+                        width: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 const Text(
                   'Username',
                   style: TextStyle(
@@ -157,14 +204,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
-                if (errorMessage != null) ...
-                  [
-                    const SizedBox(height: 10),
-                    Text(
-                      errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 13),
-                    ),
-                  ],
+                if (errorMessage != null) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 13),
+                  ),
+                ],
                 const SizedBox(height: 10),
                 Center(
                   child: SizedBox(

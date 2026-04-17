@@ -199,7 +199,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 child: Column(
                   children: [
                     // Name Field
-                    _buildTextField('NAME', _nameController),
+                    _buildTextField('IN-GAME NAME', _nameController),
                     SizedBox(height: 16.h),
 
                     // Username Field

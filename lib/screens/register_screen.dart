@@ -73,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Name',
+                  'In-Game Name',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: nameController,
                   style: const TextStyle(fontSize: 15, color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Enter your name',
+                    hintText: 'Enter your in-game name',
                     hintStyle: const TextStyle(color: Color(0xFF8A8A8A)),
                     prefixIcon: const Icon(
                       Icons.person_outline_rounded,

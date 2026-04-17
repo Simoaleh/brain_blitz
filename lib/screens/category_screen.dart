@@ -15,7 +15,7 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   String? selectedCategory;
 
-  final List<String> categories = ['Technology', 'Chemistry', 'Programming'];
+  final List<String> categories = ['General','Technology', 'Chemistry', 'Programming'];
   final List<String> difficulties = ['Easy', 'Medium', 'Hard'];
 
   @override

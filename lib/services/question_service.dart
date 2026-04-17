@@ -135,6 +135,75 @@ class QuestionService {
     'garbage collection',
     'interpreter',
   ];
+
+  final List<String> wordBankGeneralEasy = [
+    'apple',
+    'bread',
+    'water',
+    'house',
+    'door',
+    'window',
+    'chair',
+    'table',
+    'book',
+    'pen',
+    'paper',
+    'car',
+    'tree',
+    'flower',
+    'sun',
+    'moon',
+    'star',
+    'cloud',
+    'rain',
+    'snow',
+  ];
+
+  final List<String> wordBankGeneralMedium = [
+    'umbrella',
+    'bicycle',
+    'kitchen',
+    'bedroom',
+    'garden',
+    'bridge',
+    'mountain',
+    'river',
+    'ocean',
+    'beach',
+    'market',
+    'restaurant',
+    'hospital',
+    'library',
+    'museum',
+    'theater',
+    'newspaper',
+    'magazine',
+    'telephone',
+    'envelope',
+  ];
+
+  final List<String> wordBankGeneralHard = [
+    'nostalgia',
+    'ambiguous',
+    'eloquent',
+    'ephemeral',
+    'serendipity',
+    'inquisitive',
+    'melancholy',
+    'pragmatic',
+    'meticulous',
+    'ubiquitous',
+    'inevitable',
+    'sentimental',
+    'paradox',
+    'diligent',
+    'transient',
+    'obscure',
+    'vivid',
+    'enigmatic',
+    'benevolent',
+    'resilient',
+  ];
   
   Future<Question> fetchQuestion(String word) async {
     final response = await http.get(Uri.parse('$_baseUrl/$word'));
@@ -168,6 +237,10 @@ class QuestionService {
     if (c == 'programming' && d == 'easy') return wordBankProgrammingEasy;
     if (c == 'programming' && d == 'medium') return wordBankProgrammingMedium;
     if (c == 'programming' && d == 'hard') return wordBankProgrammingHard;
+
+    if (c == 'general' && d == 'easy') return wordBankGeneralEasy;
+    if (c == 'general' && d == 'medium') return wordBankGeneralMedium;
+    if (c == 'general' && d == 'hard') return wordBankGeneralHard;
 
     return wordBankProgrammingEasy;
   }

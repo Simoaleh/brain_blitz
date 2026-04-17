@@ -44,6 +44,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     onTap: () => setState(() => selectedCategory = category),
                   ),
                 ),
+                const SizedBox(height: 16),
+                MenuButton(
+                  label: 'BACK',
+                  onTap: () => Navigator.pop(context),
+                ),
               ] else ...[
                 ...difficulties.map(
                   (difficulty) => MenuButton(

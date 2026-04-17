@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:brain_blitz/state/game_state.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:brain_blitz/screens/settings_screen.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -17,6 +18,8 @@ class _GameScreenState extends State<GameScreen> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final FlutterTts _tts = FlutterTts();
+  final GlobalKey _tilesKey =
+      GlobalKey(); // 👈 Track tile position for scrolling
 
   @override
   void initState() {
@@ -26,7 +29,7 @@ class _GameScreenState extends State<GameScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<GameState>().loadQuestion();
-        _focusNode.requestFocus();
+        _focusNode.requestFocus(); // 👈 Request focus to show keyboard
       }
     });
   }
@@ -113,8 +116,32 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  // 👇 Helper: Scroll to tiles when keyboard opens
+  void _scrollToTiles() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = this.context;
+      if (!mounted) return;
+      final renderBox =
+          _tilesKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        final offset = renderBox.localToGlobal(Offset.zero);
+        final screenHeight = MediaQuery.of(context).size.height;
+        final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        // If tiles are below keyboard bottom, scroll up
+        if (offset.dy + renderBox.size.height > screenHeight - keyboardHeight) {
+          Scrollable.ensureVisible(
+            _tilesKey.currentContext!,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final gameState = context.watch<GameState>();
     final word = gameState.currentQuestion?.word ?? '';
     final wordLength = word.length;
@@ -145,13 +172,23 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
 
+    // 👇 Listen for keyboard changes to scroll to tiles
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (keyboardHeight > 0 && effectiveTyped.isNotEmpty) {
+        _scrollToTiles();
+      }
+    });
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true, // 👈 Enable keyboard resizing
       body: SafeArea(
         child: GestureDetector(
           onTap: () => _focusNode.requestFocus(),
           child: SingleChildScrollView(
-            reverse: true,
+            // 👇 Remove reverse: true - causes scrolling issues with keyboard
+            padding: EdgeInsets.only(
+              bottom: keyboardHeight > 0 ? keyboardHeight + 20.h : 20.h,
+            ),
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight:
@@ -256,19 +293,18 @@ class _GameScreenState extends State<GameScreen> {
                                 ? const Center(
                                     child: CircularProgressIndicator(),
                                   )
-                                : FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      gameState.currentQuestion?.definition ??
-                                          '',
-                                      textAlign: TextAlign.center,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 5,
-                                      style: GoogleFonts.frederickaTheGreat(
-                                        fontSize: 24.sp,
-                                        color: Colors.white,
-                                      ),
+                                : AutoSizeText(
+                                    gameState.currentQuestion?.definition ?? '',
+                                    textAlign: TextAlign.center,
+                                    minFontSize: 16.sp,
+                                    maxFontSize: 24.sp,
+                                    stepGranularity: 1.sp,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 5,
+                                    wrapWords: true,
+                                    textScaleFactor: 1.0,
+                                    style: GoogleFonts.frederickaTheGreat(
+                                      color: Colors.white,
                                     ),
                                   ),
                           ),
@@ -290,7 +326,8 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     ),
                     SizedBox(height: 16.h),
-                    // Hidden text field
+
+                    // 👇 Hidden text field (still hidden, but now keyboard-aware)
                     SizedBox(
                       height: 0,
                       child: Opacity(
@@ -299,6 +336,11 @@ class _GameScreenState extends State<GameScreen> {
                           controller: _controller,
                           focusNode: _focusNode,
                           maxLength: inputMaxLength,
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.none,
+                          enableSuggestions: false,
+                          autocorrect:
+                              false, // 👈 Prevent autocorrect interference
                           onChanged: (value) {
                             setState(() {});
 
@@ -347,6 +389,7 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                     ),
+
                     // Dictate button
                     SizedBox(height: 8.h),
                     IconButton(
@@ -363,8 +406,11 @@ class _GameScreenState extends State<GameScreen> {
                           : _speakWord,
                     ),
                     SizedBox(height: 4.h),
-                    // Letter tiles
+
+                    // 👇 Letter tiles - now tracked with GlobalKey for scrolling
                     Padding(
+                      key:
+                          _tilesKey, // 👈 Track this widget for keyboard scrolling
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

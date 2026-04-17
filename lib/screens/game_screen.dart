@@ -36,7 +36,20 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _speakWord() async {
     final word = context.read<GameState>().currentQuestion?.word;
-    if (word != null) await _tts.speak(word);
+    if (word != null) {
+      await _tts.speak(word);
+      _restoreKeyboardFocus();
+    }
+  }
+
+  void _restoreKeyboardFocus() {
+    _focusNode.requestFocus();
+    // Ensure keyboard is shown
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted && _focusNode.hasFocus) {
+        // Keyboard should show automatically with focus
+      }
+    });
   }
 
   @override
@@ -216,8 +229,8 @@ class _GameScreenState extends State<GameScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Image.asset(
                               'assets/images/settings_icon.png',
-                              width: 64.w,
-                              height: 64.w,
+                              width: 40.w,
+                              height: 40.w,
                             ),
                           ),
                         ),
@@ -226,7 +239,7 @@ class _GameScreenState extends State<GameScreen> {
                           child: Text(
                             'LEVEL ${gameState.level}',
                             style: GoogleFonts.pressStart2p(
-                              fontSize: 30.sp,
+                              fontSize: 24.sp,
                               color: Colors.orange,
                             ),
                           ),
@@ -236,8 +249,8 @@ class _GameScreenState extends State<GameScreen> {
                             opacity: gameState.hintUsed ? 0.3 : 1.0,
                             child: Image.asset(
                               'assets/images/hint_icon.png',
-                              width: 64.w,
-                              height: 64.w,
+                              width: 40.w,
+                              height: 40.w,
                             ),
                           ),
                           onPressed: gameState.hintUsed
@@ -246,6 +259,7 @@ class _GameScreenState extends State<GameScreen> {
                                   context.read<GameState>().setHintIndex(
                                     _controller.text.length,
                                   );
+                                  _restoreKeyboardFocus();
                                 },
                         ),
                       ],
@@ -401,7 +415,9 @@ class _GameScreenState extends State<GameScreen> {
                       key:
                           _tilesKey, // 👈 Track this widget for keyboard scrolling
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      child: Row(
+                      child: GestureDetector(
+                        onTap: () => _restoreKeyboardFocus(),
+                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(wordLength, (i) {
                           final displayLetter = i < effectiveTyped.length
@@ -451,6 +467,7 @@ class _GameScreenState extends State<GameScreen> {
                             ),
                           );
                         }),
+                        ),
                       ),
                     ),
                     SizedBox(height: 12.h),

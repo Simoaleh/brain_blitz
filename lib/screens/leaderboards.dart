@@ -7,26 +7,26 @@ class LeaderboardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final players = [
-      {'name': 'Alice', 'score': 120},
-      {'name': 'Bob', 'score': 98},
-      {'name': 'Charlie', 'score': 87},
-      {'name': 'Diana', 'score': 75},
-      {'name': 'Ethan', 'score': 64},
-      {'name': 'Fiona', 'score': 61},
-      {'name': 'George', 'score': 57},
-      {'name': 'Hannah', 'score': 53},
-      {'name': 'Ivan', 'score': 49},
-      {'name': 'Julia', 'score': 45},
-      {'name': 'Kevin', 'score': 42},
-      {'name': 'Luna', 'score': 38},
-      {'name': 'Marco', 'score': 35},
-      {'name': 'Nina', 'score': 30},
-      {'name': 'Oscar', 'score': 27},
-      {'name': 'Paula', 'score': 24},
-      {'name': 'Quinn', 'score': 20},
-      {'name': 'Rita', 'score': 17},
-      {'name': 'Sam', 'score': 14},
-      {'name': 'Tina', 'score': 10},
+      {'name': 'Alice', 'level': 45},
+      {'name': 'Bob', 'level': 38},
+      {'name': 'Charlie', 'level': 35},
+      {'name': 'Diana', 'level': 32},
+      {'name': 'Ethan', 'level': 29},
+      {'name': 'Fiona', 'level': 27},
+      {'name': 'George', 'level': 25},
+      {'name': 'Hannah', 'level': 23},
+      {'name': 'Ivan', 'level': 21},
+      {'name': 'Julia', 'level': 19},
+      {'name': 'Kevin', 'level': 17},
+      {'name': 'Luna', 'level': 16},
+      {'name': 'Marco', 'level': 15},
+      {'name': 'Nina', 'level': 14},
+      {'name': 'Oscar', 'level': 13},
+      {'name': 'Paula', 'level': 12},
+      {'name': 'Quinn', 'level': 11},
+      {'name': 'Rita', 'level': 10},
+      {'name': 'Sam', 'level': 9},
+      {'name': 'Tina', 'level': 8},
     ];
 
     const medalColors = [
@@ -49,7 +49,18 @@ class LeaderboardsScreen extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.orange,
+                      size: 20,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
                 Center(
                   child: Container(
                     width: 500,
@@ -77,7 +88,7 @@ class LeaderboardsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(
@@ -88,14 +99,14 @@ class LeaderboardsScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final player = players[index];
                       final name = player['name'] as String;
-                      final score = player['score'] as int;
+                      final level = player['level'] as int;
                       final isMedal = index < 3;
                       final rankColor = isMedal
                           ? medalColors[index]
                           : Colors.white;
 
                       return Card(
-                        color: Colors.white.withOpacity(0.85),
+                        color: const Color.fromARGB(255, 74, 34, 139).withOpacity(0.75),
                         margin: const EdgeInsets.symmetric(vertical: 6),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -117,7 +128,7 @@ class LeaderboardsScreen extends StatelessWidget {
                                   style: GoogleFonts.pressStart2p(
                                     fontSize: 12,
                                     color: rankColor == Colors.white
-                                        ? Colors.deepPurple
+                                        ? const Color.fromARGB(255, 237, 227, 255)
                                         : rankColor,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -130,13 +141,13 @@ class LeaderboardsScreen extends StatelessWidget {
                                   style: GoogleFonts.rajdhani(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.black87,
+                                    color: const Color.fromARGB(221, 253, 247, 247),
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Text(
-                                '$score pts',
+                                'Level $level',
                                 style: GoogleFonts.rajdhani(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -151,28 +162,6 @@ class LeaderboardsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      width: 280,
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(
-                        'Back to Home',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 14,
-                          color: const Color(0xFF542EA0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

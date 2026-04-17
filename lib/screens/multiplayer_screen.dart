@@ -325,7 +325,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                 const SizedBox(height: 20),
 
                 Text(
-                  'BATTLE ARENA',
+                  'WIZARD ARENA',
                   style: GoogleFonts.pressStart2p(
                     color: Colors.orange,
                     fontSize: 14,

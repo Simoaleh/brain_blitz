@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:brain_blitz/state/game_state.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,15 +52,27 @@ class _GameScreenState extends State<GameScreen> {
       builder: (_) => AlertDialog(
         backgroundColor: Colors.brown[900],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text(
-          'GAME OVER',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.pressStart2p(fontSize: 20, color: Colors.orange),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'GAME OVER',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.pressStart2p(
+              fontSize: 20.sp,
+              color: Colors.orange,
+            ),
+          ),
         ),
-        content: Text(
-          'You reached Level ${context.read<GameState>().level}',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.pressStart2p(fontSize: 12, color: Colors.white),
+        content: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'You reached Level ${context.read<GameState>().level}',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.pressStart2p(
+              fontSize: 12.sp,
+              color: Colors.white,
+            ),
+          ),
         ),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
@@ -73,7 +86,7 @@ class _GameScreenState extends State<GameScreen> {
             child: Text(
               'PLAY AGAIN',
               style: GoogleFonts.pressStart2p(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: Colors.orange,
               ),
             ),
@@ -81,11 +94,18 @@ class _GameScreenState extends State<GameScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/home',
+                (route) => false,
+              );
             },
             child: Text(
               'QUIT',
-              style: GoogleFonts.pressStart2p(fontSize: 12, color: Colors.red),
+              style: GoogleFonts.pressStart2p(
+                fontSize: 12.sp,
+                color: Colors.red,
+              ),
             ),
           ),
         ],
@@ -101,8 +121,17 @@ class _GameScreenState extends State<GameScreen> {
     final typed = _controller.text;
     final hintIndex = gameState.hintIndex;
     final int? inputMaxLength = wordLength > 0
-      ? (hintIndex != null ? (wordLength - 1).clamp(1, wordLength) : wordLength)
-      : null;
+        ? (hintIndex != null
+              ? (wordLength - 1).clamp(1, wordLength)
+              : wordLength)
+        : null;
+
+    // Responsive tile size: fill screen width minus padding, clamped
+    final screenWidth = MediaQuery.of(context).size.width;
+    final tileSize = wordLength > 0
+        ? ((screenWidth - 48) / wordLength).clamp(28.0, 52.0)
+        : 36.0;
+    final tileFontSize = (tileSize * 0.5).clamp(10.0, 22.0);
 
     // Inject hint letter into typed string for display and answer checking
     String effectiveTyped = typed;
@@ -117,241 +146,283 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: GestureDetector(
           onTap: () => _focusNode.requestFocus(),
-          child: Column(
-            children: [
-              // Top bar
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const SettingsScreen(),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/images/settings_icon.png',
-                      width: 64,
-                      height: 64,
-                    ),
-                  ),
-                ),
-
-                  Text(
-                    'LEVEL ${gameState.level}',
-                    style: GoogleFonts.pressStart2p(
-                      fontSize: 30,
-                      color: Colors.orange,
-                    ),
-                  ),
-                  IconButton(
-                    icon: Opacity(
-                      opacity: gameState.hintUsed ? 0.3 : 1.0,
-                      child: Image.asset(
-                        'assets/images/hint_icon.png',
-                        width: 64,
-                        height: 64,
-                      ),
-                    ),
-                    onPressed: gameState.hintUsed
-                        ? null
-                        : () {
-                            context.read<GameState>().setHintIndex(
-                              _controller.text.length,
+          child: SingleChildScrollView(
+            reverse: true,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    // Top bar
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const SettingsScreen(),
+                              ),
                             );
                           },
-                  ),
-                ],
-              ),
-              // Heart bar
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (i) {
-                  return Image.asset(
-                    i < gameState.lives
-                        ? 'assets/images/heart.png'
-                        : 'assets/images/heart_black.png',
-                    width: 36,
-                    height: 36,
-                  );
-                }),
-              ),
-              SizedBox(
-                height: 360,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/game_background.png',
-                          width: double.infinity,
-                          height: 260,
-                          fit: BoxFit.fill,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(
+                              'assets/images/settings_icon.png',
+                              width: 64.w,
+                              height: 64.w,
+                            ),
+                          ),
                         ),
-                        Image.asset(
-                          'assets/images/wood.jpg',
-                          width: double.infinity,
-                          height: 100,
-                          fit: BoxFit.fill,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'LEVEL ${gameState.level}',
+                            style: GoogleFonts.pressStart2p(
+                              fontSize: 30.sp,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Opacity(
+                            opacity: gameState.hintUsed ? 0.3 : 1.0,
+                            child: Image.asset(
+                              'assets/images/hint_icon.png',
+                              width: 64.w,
+                              height: 64.w,
+                            ),
+                          ),
+                          onPressed: gameState.hintUsed
+                              ? null
+                              : () {
+                                  context.read<GameState>().setHintIndex(
+                                    _controller.text.length,
+                                  );
+                                },
                         ),
                       ],
                     ),
-                    Positioned(
-                      left: 60,
-                      right: 60,
-                      top: 40,
-                      height: 180,
-                      child: gameState.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : Text(
-                              gameState.currentQuestion?.definition ?? '',
-                              textAlign: TextAlign.center,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 5,
-                              style: GoogleFonts.frederickaTheGreat(
-                                fontSize: 24,
-                                color: Colors.white,
+                    // Heart bar
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(3, (i) {
+                        return Image.asset(
+                          i < gameState.lives
+                              ? 'assets/images/heart.png'
+                              : 'assets/images/heart_black.png',
+                          width: 36.w,
+                          height: 36.w,
+                        );
+                      }),
+                    ),
+                    SizedBox(
+                      height: 360.h,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/game_background.png',
+                                width: double.infinity,
+                                height: 260.h,
+                                fit: BoxFit.fill,
                               ),
-                            ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 10,
-                      child: Image.asset(
-                        gameState.hasAnswered
-                            ? (gameState.isCorrect
-                                  ? 'assets/images/proud_wiz.png'
-                                  : 'assets/images/sad_wiz.png')
-                            : 'assets/images/regular_wiz.png',
-                        width: 120,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Hidden text field
-              SizedBox(
-                height: 0,
-                child: Opacity(
-                  opacity: 0,
-                  child: TextField(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    maxLength: inputMaxLength,
-                    onChanged: (value) {
-                      setState(() {});
-
-                      String effective = value;
-                      if (hintIndex != null && word.isNotEmpty) {
-                        final h = hintIndex;
-                        if (effective.length >= h) {
-                          effective =
-                              effective.substring(0, h) +
-                              word[h].toLowerCase() +
-                              effective.substring(h);
-                        }
-                      }
-
-                      if (effective.length == wordLength) {
-                        context.read<GameState>().checkAnswer(effective);
-                        final gs = context.read<GameState>();
-                        if (gs.isCorrect) {
-                          Future.delayed(const Duration(milliseconds: 800), () {
-                            if (!mounted) return;
-                            _controller.clear();
-                            context.read<GameState>().loadQuestion();
-                            _focusNode.requestFocus();
-                          });
-                        } else {
-                          Future.delayed(const Duration(milliseconds: 600), () {
-                            if (!mounted) return;
-                            _controller.clear();
-                            setState(() {});
-                            if (context.read<GameState>().lives <= 0) {
-                              _showGameOver();
-                            } else {
-                              _focusNode.requestFocus();
-                            }
-                          });
-                        }
-                      }
-                    },
-                    decoration: const InputDecoration(counterText: ''),
-                  ),
-                ),
-              ),
-              // Dictate button
-              const SizedBox(height: 8),
-              IconButton(
-                iconSize: 48,
-                icon: const Icon(Icons.volume_up_rounded, color: Colors.orange),
-                tooltip: 'Hear the word',
-                onPressed: gameState.isLoading || gameState.currentQuestion == null
-                    ? null
-                    : _speakWord,
-              ),
-              const SizedBox(height: 4),
-              // Letter tiles
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(wordLength, (i) {
-                  final displayLetter = i < effectiveTyped.length
-                      ? effectiveTyped[i].toUpperCase()
-                      : '';
-
-                  Color tileColor;
-                  if (effectiveTyped.length == wordLength) {
-                    tileColor = gameState.isCorrect
-                        ? Colors.green[300]!
-                        : Colors.red[300]!;
-                  } else if (i == hintIndex) {
-                    tileColor = Colors.blue[200]!;
-                  } else if (i < effectiveTyped.length) {
-                    tileColor = Colors.orange[200]!;
-                  } else {
-                    tileColor = Colors.grey[300]!;
-                  }
-
-                  return AnimatedScale(
-                    scale: i == effectiveTyped.length - 1 ? 1.2 : 1.0,
-                    duration: const Duration(milliseconds: 100),
-                    curve: Curves.easeOut,
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      margin: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: tileColor,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Center(
-                        child: Text(
-                          displayLetter,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                              Image.asset(
+                                'assets/images/wood.jpg',
+                                width: double.infinity,
+                                height: 100.h,
+                                fit: BoxFit.fill,
+                              ),
+                            ],
                           ),
+                          Positioned(
+                            left: 60.w,
+                            right: 60.w,
+                            top: 40.h,
+                            height: 180.h,
+                            child: gameState.isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      gameState.currentQuestion?.definition ??
+                                          '',
+                                      textAlign: TextAlign.center,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 5,
+                                      style: GoogleFonts.frederickaTheGreat(
+                                        fontSize: 24.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 10.w,
+                            child: Image.asset(
+                              gameState.hasAnswered
+                                  ? (gameState.isCorrect
+                                        ? 'assets/images/proud_wiz.png'
+                                        : 'assets/images/sad_wiz.png')
+                                  : 'assets/images/regular_wiz.png',
+                              width: 120.w,
+                              height: 200.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    // Hidden text field
+                    SizedBox(
+                      height: 0,
+                      child: Opacity(
+                        opacity: 0,
+                        child: TextField(
+                          controller: _controller,
+                          focusNode: _focusNode,
+                          maxLength: inputMaxLength,
+                          onChanged: (value) {
+                            setState(() {});
+
+                            String effective = value;
+                            if (hintIndex != null && word.isNotEmpty) {
+                              final h = hintIndex;
+                              if (effective.length >= h) {
+                                effective =
+                                    effective.substring(0, h) +
+                                    word[h].toLowerCase() +
+                                    effective.substring(h);
+                              }
+                            }
+
+                            if (effective.length == wordLength) {
+                              context.read<GameState>().checkAnswer(effective);
+                              final gs = context.read<GameState>();
+                              if (gs.isCorrect) {
+                                Future.delayed(
+                                  const Duration(milliseconds: 800),
+                                  () {
+                                    if (!mounted) return;
+                                    _controller.clear();
+                                    context.read<GameState>().loadQuestion();
+                                    _focusNode.requestFocus();
+                                  },
+                                );
+                              } else {
+                                Future.delayed(
+                                  const Duration(milliseconds: 600),
+                                  () {
+                                    if (!mounted) return;
+                                    _controller.clear();
+                                    setState(() {});
+                                    if (context.read<GameState>().lives <= 0) {
+                                      _showGameOver();
+                                    } else {
+                                      _focusNode.requestFocus();
+                                    }
+                                  },
+                                );
+                              }
+                            }
+                          },
+                          decoration: const InputDecoration(counterText: ''),
                         ),
                       ),
                     ),
-                  );
-                }),
+                    // Dictate button
+                    SizedBox(height: 8.h),
+                    IconButton(
+                      iconSize: 48.w,
+                      icon: const Icon(
+                        Icons.volume_up_rounded,
+                        color: Colors.orange,
+                      ),
+                      tooltip: 'Hear the word',
+                      onPressed:
+                          gameState.isLoading ||
+                              gameState.currentQuestion == null
+                          ? null
+                          : _speakWord,
+                    ),
+                    SizedBox(height: 4.h),
+                    // Letter tiles
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(wordLength, (i) {
+                          final displayLetter = i < effectiveTyped.length
+                              ? effectiveTyped[i].toUpperCase()
+                              : '';
+
+                          Color tileColor;
+                          if (effectiveTyped.length == wordLength) {
+                            tileColor = gameState.isCorrect
+                                ? Colors.green[300]!
+                                : Colors.red[300]!;
+                          } else if (i == hintIndex) {
+                            tileColor = Colors.blue[200]!;
+                          } else if (i < effectiveTyped.length) {
+                            tileColor = Colors.orange[200]!;
+                          } else {
+                            tileColor = Colors.grey[300]!;
+                          }
+
+                          return AnimatedScale(
+                            scale: i == effectiveTyped.length - 1 ? 1.2 : 1.0,
+                            duration: const Duration(milliseconds: 100),
+                            curve: Curves.easeOut,
+                            child: Container(
+                              width: tileSize,
+                              height: tileSize,
+                              margin: EdgeInsets.all(
+                                (tileSize * 0.08).clamp(2.0, 5.0),
+                              ),
+                              decoration: BoxDecoration(
+                                color: tileColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    displayLetter,
+                                    style: TextStyle(
+                                      fontSize: tileFontSize,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),

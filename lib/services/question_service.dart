@@ -135,7 +135,7 @@ class QuestionService {
     'garbage collection',
     'interpreter',
   ];
-  
+
   Future<Question> fetchQuestion(String word) async {
     final response = await http.get(Uri.parse('$_baseUrl/$word'));
 

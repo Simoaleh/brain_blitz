@@ -5,6 +5,7 @@ import 'package:brain_blitz/state/game_state.dart';
 import 'package:brain_blitz/screens/login_screen.dart';
 import 'package:brain_blitz/screens/home_screen.dart';
 import 'package:brain_blitz/services/bgm_service.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,19 +35,24 @@ class _BrainBlitzAppState extends State<BrainBlitzApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF4B0082)),
-      builder: (context, child) => Listener(
-        onPointerDown: (_) {
-          if (kIsWeb && !BgmService.instance.isStarted) {
-            BgmService.instance.start();
-          }
-        },
-        child: child,
+    return ScreenUtilInit(
+      designSize: const Size(360, 800),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF4B0082)),
+        builder: (context, child) => Listener(
+          onPointerDown: (_) {
+            if (kIsWeb && !BgmService.instance.isStarted) {
+              BgmService.instance.start();
+            }
+          },
+          child: child!,
+        ),
+        home: const LoginScreen(),
+        routes: {'/home': (_) => const HomeScreen()},
       ),
-      home: const LoginScreen(),
-      routes: {'/home': (_) => const HomeScreen()},
     );
   }
 }

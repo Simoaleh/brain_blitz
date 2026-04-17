@@ -165,9 +165,9 @@ class _GameScreenState extends State<GameScreen> {
     // Responsive tile size: fill screen width minus padding, clamped
     final screenWidth = MediaQuery.of(context).size.width;
     final tileSize = wordLength > 0
-        ? ((screenWidth - 48) / wordLength).clamp(28.0, 52.0)
+        ? ((screenWidth - 48) / wordLength).clamp(16.0, 52.0)
         : 36.0;
-    final tileFontSize = (tileSize * 0.5).clamp(10.0, 22.0);
+    final tileFontSize = (tileSize * 0.5).clamp(8.0, 22.0);
 
     // Inject hint letter into typed string for display and answer checking
     String effectiveTyped = typed;

@@ -106,7 +106,12 @@ class LeaderboardsScreen extends StatelessWidget {
                           : Colors.white;
 
                       return Card(
-                        color: const Color.fromARGB(255, 74, 34, 139).withOpacity(0.75),
+                        color: const Color.fromARGB(
+                          255,
+                          74,
+                          34,
+                          139,
+                        ).withOpacity(0.75),
                         margin: const EdgeInsets.symmetric(vertical: 6),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -128,20 +133,30 @@ class LeaderboardsScreen extends StatelessWidget {
                                   style: GoogleFonts.pressStart2p(
                                     fontSize: 12,
                                     color: rankColor == Colors.white
-                                        ? const Color.fromARGB(255, 237, 227, 255)
+                                        ? const Color.fromARGB(
+                                            255,
+                                            237,
+                                            227,
+                                            255,
+                                          )
                                         : rankColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 15),
                               Expanded(
                                 child: Text(
                                   name,
                                   style: GoogleFonts.rajdhani(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
-                                    color: const Color.fromARGB(221, 253, 247, 247),
+                                    color: const Color.fromARGB(
+                                      221,
+                                      253,
+                                      247,
+                                      247,
+                                    ),
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),

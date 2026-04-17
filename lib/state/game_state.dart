@@ -21,6 +21,24 @@ class GameState extends ChangeNotifier {
     selectedCategory = category;
     selectedDifficulty = difficulty;
     resetGame();
+    _setLivesByDifficulty(difficulty);
+  }
+
+  void _setLivesByDifficulty(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        lives = 5;
+        break;
+      case 'medium':
+        lives = 3;
+        break;
+      case 'hard':
+        lives = 1;
+        break;
+      default:
+        lives = 3;
+    }
+    notifyListeners();
   }
 
   Future<void> loadQuestion() async {
@@ -74,7 +92,7 @@ class GameState extends ChangeNotifier {
 
   void resetGame() {
     level = 1;
-    lives = 3;
+    _setLivesByDifficulty(selectedDifficulty);
     hintUsed = false;
     hintIndex = null;
     currentQuestion = null;

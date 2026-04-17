@@ -204,13 +204,19 @@ class QuestionService {
     'benevolent',
     'resilient',
   ];
-  
+
   Future<Question> fetchQuestion(String word) async {
     final response = await http.get(Uri.parse('$_baseUrl/$word'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final definition = data[0]['meanings'][0]['definitions'][0]['definition'];
+      var definition = data[0]['meanings'][0]['definitions'][0]['definition'];
+
+      // Extract only the first sentence
+      final firstSentence = definition.split(RegExp(r'[.!?]')).first.trim();
+      if (firstSentence.isNotEmpty) {
+        definition = firstSentence;
+      }
 
       return Question(word: word, definition: definition);
     } else {

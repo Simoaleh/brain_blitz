@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -44,12 +45,7 @@ class _GameScreenState extends State<GameScreen> {
 
   void _restoreKeyboardFocus() {
     _focusNode.requestFocus();
-    // Ensure keyboard is shown
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (mounted && _focusNode.hasFocus) {
-        // Keyboard should show automatically with focus
-      }
-    });
+    SystemChannels.textInput.invokeMethod('TextInput.show');
   }
 
   @override

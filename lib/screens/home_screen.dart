@@ -3,6 +3,7 @@ import 'package:brain_blitz/widgets/menu_button.dart';
 import 'package:brain_blitz/screens/leaderboards.dart';
 import 'package:brain_blitz/screens/category_screen.dart';
 import 'package:brain_blitz/screens/settings_screen.dart';
+import 'package:brain_blitz/screens/multiplayer_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,7 +27,13 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const CategoryScreen()),
                 ),
               ),
-              MenuButton(label: 'Multiplayer', onTap: () {}),
+              MenuButton(
+                label: 'Multiplayer',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MultiplayerScreen()),
+                ),
+              ),
               MenuButton(
                 label: 'Leaderboards',
                 onTap: () => Navigator.push(

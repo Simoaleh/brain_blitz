@@ -19,8 +19,6 @@ class _GameScreenState extends State<GameScreen> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final FlutterTts _tts = FlutterTts();
-  final GlobalKey _tilesKey =
-      GlobalKey(); // Track tile position for scrolling
 
   @override
   void initState() {
@@ -125,29 +123,6 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  // 👇 Helper: Scroll to tiles when keyboard opens
-  void _scrollToTiles() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = this.context;
-      if (!mounted) return;
-      final renderBox =
-          _tilesKey.currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox != null) {
-        final offset = renderBox.localToGlobal(Offset.zero);
-        final screenHeight = MediaQuery.of(context).size.height;
-        final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-        // If tiles are below keyboard bottom, scroll up
-        if (offset.dy + renderBox.size.height > screenHeight - keyboardHeight) {
-          Scrollable.ensureVisible(
-            _tilesKey.currentContext!,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        }
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -165,7 +140,7 @@ class _GameScreenState extends State<GameScreen> {
     // Responsive tile size: fill screen width minus padding, clamped
     final screenWidth = MediaQuery.of(context).size.width;
     final tileSize = wordLength > 0
-        ? ((screenWidth - 48) / wordLength).clamp(16.0, 52.0)
+        ? ((screenWidth - 100) / wordLength).clamp(16.0, 52.0)
         : 36.0;
     final tileFontSize = (tileSize * 0.5).clamp(8.0, 22.0);
 
@@ -180,13 +155,6 @@ class _GameScreenState extends State<GameScreen> {
             effectiveTyped.substring(h);
       }
     }
-
-    // 👇 Listen for keyboard changes to scroll to tiles
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (keyboardHeight > 0 && effectiveTyped.isNotEmpty) {
-        _scrollToTiles();
-      }
-    });
 
     return Scaffold(
       resizeToAvoidBottomInset: true, // 👈 Enable keyboard resizing
@@ -406,10 +374,8 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     ),
 
-                    // 👇 Letter tiles - now tracked with GlobalKey for scrolling
+                    // 👇 Letter tiles
                     Padding(
-                      key:
-                          _tilesKey, // 👈 Track this widget for keyboard scrolling
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       child: GestureDetector(
                         onTap: () => _restoreKeyboardFocus(),

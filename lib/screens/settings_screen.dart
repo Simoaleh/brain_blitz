@@ -15,11 +15,13 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   late bool _musicEnabled;
   late bool _notificationsEnabled;
+  late double _musicVolume;
 
   @override
   void initState() {
     super.initState();
     _musicEnabled = BgmService.instance.isStarted;
+    _musicVolume = BgmService.instance.currentVolume;
     _notificationsEnabled = true;
   }
 
@@ -224,6 +226,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               value: _musicEnabled,
                               activeColor: Colors.blue[900],
                               onChanged: _toggleMusic,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Music Volume Slider
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 12.h),
+                      width: 300.w,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 16.h,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'VOLUME',
+                              style: GoogleFonts.pressStart2p(
+                                fontSize: 11.sp,
+                                color: Colors.blue[900],
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Slider(
+                                    value: _musicVolume,
+                                    min: 0.0,
+                                    max: 1.0,
+                                    activeColor: Colors.blue[900],
+                                    inactiveColor: Colors.blue[200],
+                                    onChanged: _musicEnabled
+                                        ? (value) {
+                                            setState(() {
+                                              _musicVolume = value;
+                                            });
+                                            BgmService.instance
+                                                .setVolume(value);
+                                          }
+                                        : null,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              '${(_musicVolume * 100).toStringAsFixed(0)}%',
+                              style: GoogleFonts.pressStart2p(
+                                fontSize: 9.sp,
+                                color: Colors.blue[900],
+                              ),
                             ),
                           ],
                         ),

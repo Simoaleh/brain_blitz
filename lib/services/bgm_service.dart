@@ -8,6 +8,7 @@ class BgmService {
   final AudioPlayer player = AudioPlayer();
   bool isStarted = false;
   bool listenersAttached = false;
+  double currentVolume = 0.10;
 
   void attachListeners() {
     if (listenersAttached) return;
@@ -35,7 +36,7 @@ class BgmService {
     }
 
     await player.setReleaseMode(ReleaseMode.loop);
-    await player.setVolume(0.10);
+    await player.setVolume(currentVolume);
     await player.play(AssetSource('audio/bgm.mp3'));
     isStarted = true; 
   }
@@ -60,5 +61,10 @@ class BgmService {
   Future<void> dispose() async {
     await player.dispose();
     isStarted = false;
+  }
+
+  Future<void> setVolume(double volume) async {
+    currentVolume = volume.clamp(0.0, 1.0);
+    await player.setVolume(currentVolume);
   }
 }

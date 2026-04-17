@@ -253,7 +253,7 @@ class _GameScreenState extends State<GameScreen> {
                     // Heart bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(3, (i) {
+                      children: List.generate(gameState.lives, (i) {
                         return Image.asset(
                           i < gameState.lives
                               ? 'assets/images/heart.png'
@@ -300,7 +300,7 @@ class _GameScreenState extends State<GameScreen> {
                                     maxFontSize: 24.sp,
                                     stepGranularity: 1.sp,
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 5,
+                                    maxLines: 8,
                                     wrapWords: true,
                                     textScaleFactor: 1.0,
                                     style: GoogleFonts.frederickaTheGreat(
@@ -311,15 +311,21 @@ class _GameScreenState extends State<GameScreen> {
                           Positioned(
                             bottom: 0,
                             left: 10.w,
-                            child: Image.asset(
-                              gameState.hasAnswered
-                                  ? (gameState.isCorrect
-                                        ? 'assets/images/proud_wiz.png'
-                                        : 'assets/images/sad_wiz.png')
-                                  : 'assets/images/regular_wiz.png',
-                              width: 120.w,
-                              height: 200.h,
-                              fit: BoxFit.cover,
+                            child: GestureDetector(
+                              onTap: gameState.isLoading ||
+                                      gameState.currentQuestion == null
+                                  ? null
+                                  : _speakWord,
+                              child: Image.asset(
+                                gameState.hasAnswered
+                                    ? (gameState.isCorrect
+                                          ? 'assets/images/proud_wiz.png'
+                                          : 'assets/images/sad_wiz.png')
+                                    : 'assets/images/regular_wiz.png',
+                                width: 120.w,
+                                height: 200.h,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ],
@@ -389,23 +395,6 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                     ),
-
-                    // Dictate button
-                    SizedBox(height: 8.h),
-                    IconButton(
-                      iconSize: 48.w,
-                      icon: const Icon(
-                        Icons.volume_up_rounded,
-                        color: Colors.orange,
-                      ),
-                      tooltip: 'Hear the word',
-                      onPressed:
-                          gameState.isLoading ||
-                              gameState.currentQuestion == null
-                          ? null
-                          : _speakWord,
-                    ),
-                    SizedBox(height: 4.h),
 
                     // 👇 Letter tiles - now tracked with GlobalKey for scrolling
                     Padding(

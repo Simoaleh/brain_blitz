@@ -22,57 +22,70 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          child: Column(
-            children: [
-              Text(
-                selectedCategory == null
-                    ? 'SELECT\nCATEGORY'
-                    : 'SELECT\nDIFFICULTY',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.pressStart2p(
-                  fontSize: 24,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  if (selectedCategory != null) {
+                    setState(() => selectedCategory = null);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
                   color: Colors.orange,
+                  size: 20,
                 ),
               ),
-              const SizedBox(height: 32),
-              if (selectedCategory == null) ...[
-                ...categories.map(
-                  (category) => MenuButton(
-                    label: category.toUpperCase(),
-                    onTap: () => setState(() => selectedCategory = category),
-                  ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                child: Column(
+                  children: [
+                    Text(
+                      selectedCategory == null
+                          ? 'SELECT\nCATEGORY'
+                          : 'SELECT\nDIFFICULTY',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 24,
+                        color: Colors.orange,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    if (selectedCategory == null) ...[
+                      ...categories.map(
+                        (category) => MenuButton(
+                          label: category.toUpperCase(),
+                          onTap: () => setState(() => selectedCategory = category),
+                        ),
+                      ),
+                    ] else ...[
+                      ...difficulties.map(
+                        (difficulty) => MenuButton(
+                          label: difficulty.toUpperCase(),
+                          onTap: () {
+                            context.read<GameState>().setGameMode(
+                              category: selectedCategory!,
+                              difficulty: difficulty,
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const GameScreen()),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-                const SizedBox(height: 16),
-                MenuButton(
-                  label: 'BACK',
-                  onTap: () => Navigator.pop(context),
-                ),
-              ] else ...[
-                ...difficulties.map(
-                  (difficulty) => MenuButton(
-                    label: difficulty.toUpperCase(),
-                    onTap: () {
-                      context.read<GameState>().setGameMode(
-                        category: selectedCategory!,
-                        difficulty: difficulty,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const GameScreen()),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                MenuButton(
-                  label: 'BACK',
-                  onTap: () => setState(() => selectedCategory = null),
-                ),
-              ],
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );

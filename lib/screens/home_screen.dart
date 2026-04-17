@@ -18,8 +18,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset('assets/images/logo.png', width: 350, height: 350),
-              const SizedBox(height: 40),
-              const SizedBox(height: 80),
+              const SizedBox(height: 5),
               MenuButton(
                 label: 'Singleplayer',
                 onTap: () => Navigator.push(

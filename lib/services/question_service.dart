@@ -149,7 +149,6 @@ class QuestionService {
     'pen',
     'paper',
     'car',
-    'tree',
     'flower',
     'sun',
     'moon',

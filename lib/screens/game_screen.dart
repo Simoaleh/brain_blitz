@@ -19,7 +19,7 @@ class _GameScreenState extends State<GameScreen> {
   final FocusNode _focusNode = FocusNode();
   final FlutterTts _tts = FlutterTts();
   final GlobalKey _tilesKey =
-      GlobalKey(); // 👈 Track tile position for scrolling
+      GlobalKey(); // Track tile position for scrolling
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _GameScreenState extends State<GameScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<GameState>().loadQuestion();
-        _focusNode.requestFocus(); // 👈 Request focus to show keyboard
+        _focusNode.requestFocus(); //  Request focus to show keyboard
       }
     });
   }

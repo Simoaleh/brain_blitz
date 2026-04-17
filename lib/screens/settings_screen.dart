@@ -11,13 +11,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late bool _notificationsEnabled;
   late bool _musicEnabled;
 
   @override
   void initState() {
     super.initState();
-    _notificationsEnabled = true;
     _musicEnabled = BgmService.instance.isStarted;
   }
 
@@ -100,6 +98,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.orange,
+                  size: 20,
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
             Center(
               child: Container(
@@ -134,41 +143,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 12),
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Notifications',
-                                style: GoogleFonts.pressStart2p(
-                                  fontSize: 11,
-                                  color: Colors.blue[900],
-                                ),
-                              ),
-                            ),
-                            Switch(
-                              value: _notificationsEnabled,
-                              activeColor: Colors.blue[900],
-                              onChanged: (value) {
-                                setState(() => _notificationsEnabled = value);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 12),
                       width: 300,

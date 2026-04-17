@@ -69,9 +69,9 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
           color: Color(0xFF1A1A2E),
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           border: Border(
-            top: BorderSide(color: Color(0xFF4A90D9), width: 2),
-            left: BorderSide(color: Color(0xFF4A90D9), width: 2),
-            right: BorderSide(color: Color(0xFF4A90D9), width: 2),
+            top: BorderSide(color: Color(0xFF4B0081), width: 2),
+            left: BorderSide(color: Color(0xFF4B0081), width: 2),
+            right: BorderSide(color: Color(0xFF4B0081), width: 2),
           ),
         ),
         padding: const EdgeInsets.all(28),
@@ -82,7 +82,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
               width: 48,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFF4A90D9),
+                color: const Color(0xFF4B0081),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -135,7 +135,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                 _StatCard(
                   label: 'Total Matches',
                   value: _profileData['totalMatches'].toString(),
-                  color: const Color(0xFF4A90D9),
+                  color: const Color(0xFF4B0081),
                 ),
                 const SizedBox(width: 12),
                 _StatCard(
@@ -251,7 +251,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(
                           Icons.arrow_back_ios_new,
-                          color: Color(0xFF4A90D9),
+                          color: Color(0xFF4B0081),
                           size: 20,
                         ),
                       ),
@@ -272,13 +272,13 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                             shape: BoxShape.circle,
                             color: const Color(0xFF16213E),
                             border: Border.all(
-                              color: const Color(0xFF4A90D9),
+                              color: const Color(0xFF4B0081),
                               width: 2,
                             ),
                           ),
                           child: const Icon(
                             Icons.person,
-                            color: Color(0xFF4A90D9),
+                            color: Color(0xFF4B0081),
                             size: 20,
                           ),
                         ),
@@ -303,12 +303,12 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                       shape: BoxShape.circle,
                       color: const Color(0xFF16213E),
                       border: Border.all(
-                        color: const Color(0xFF4A90D9),
+                        color: const Color(0xFF4B0081),
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF4A90D9).withOpacity(0.3),
+                          color: const Color(0xFF4B0081).withOpacity(0.3),
                           blurRadius: 40,
                           spreadRadius: 10,
                         ),
@@ -317,7 +317,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                     child: const Icon(
                       Icons.public,
                       size: 72,
-                      color: Color(0xFF4A90D9),
+                      color: Color(0xFF4B0081),
                     ),
                   ),
                 ),
@@ -327,7 +327,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
                 Text(
                   'BATTLE ARENA',
                   style: GoogleFonts.pressStart2p(
-                    color: const Color(0xFF4A90D9),
+                    color: Colors.orange,
                     fontSize: 14,
                     letterSpacing: 4,
                   ),
@@ -380,7 +380,7 @@ class _MultiplayerScreenState extends State<MultiplayerScreen>
         backgroundColor: const Color(0xFF1A1A2E),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: Color(0xFF4A90D9)),
+          side: const BorderSide(color: Color.fromARGB(255, 135, 6, 228)),
         ),
         behavior: SnackBarBehavior.floating,
         content: Text(
